@@ -1,0 +1,46 @@
+<? include_once "/common.php"; ?>
+
+<select name="lec_depthno01">
+		<option value="">선택하세요</option>
+		<?
+
+		$sql = "select catname,purl,priorno02 from able_leccat where depthno=2 order by catcode asc";
+		$result = mysqli_query($connect, $sql) or error(mysqli_error());
+		while($row = mysqli_fetch_array($result)){
+		?>
+		<option value="<?=$row[priorno02]?>" > <?=$row[catname]?> </option>
+		<? }?>			
+</select>
+<select name="lec_depthno02">
+		<option> 선택하세요</option>
+</select>
+
+<script>
+$(document).ready(function() {
+  $("select[name='lec_depthno01']").change(function(){
+
+    var lec_depthno01 = $(this).val(); // 선택한 구분1
+
+    $.ajax({
+      url  : "./select_box_test1.php",
+      type : "POST",
+      data : "lec_depthno01="+lec_depthno01,
+      error:function(){
+      },
+      success:function(data) {
+        json = eval("(" + data + ")");
+
+        $("select[name='lec_depthno02']").empty(); // 구분2 셀렉트박스 비우기
+  
+        $.each(json.list, function(key,state){
+            obj = state;
+            
+            rdata = "<option value='"+obj.code+"'>"+obj.name+"</option>";
+
+            $("select[name='lec_depthno02']").append(rdata);   // 구분2 셀렉트박스에 넣기
+        });
+      }
+    });
+  });
+});
+</script>
