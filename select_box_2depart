@@ -22,7 +22,7 @@ $(document).ready(function() {
     var lec_depthno01 = $(this).val(); // 선택한 구분1
 
     $.ajax({
-      url  : "./select_box_test1.php",
+      url  : "./select_box_ajax.php",
       type : "POST",
       data : "lec_depthno01="+lec_depthno01,
       error:function(){
