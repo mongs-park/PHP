@@ -1,0 +1,39 @@
+<? include_once "common.php"; ?>
+<?
+
+  $v_param = $_POST["lec_depthno01"];      // 구분1 (1=서울시)
+
+  // 구분1에 따른 구분2 DB에서 가져와 $Result[] 배열에 넣기 --------------------//
+  // 이부분은 각프로그램마다 다를것임 -----------------------------------------//
+  $sql = "   SELECT   purl
+				  ,   catname
+			 FROM     able_leccat
+			 WHERE    priorno02 = '$v_param' and depthno = 3
+			 ORDER BY priorno03
+		 "; 
+
+  $result_query = mysqli_query($connect, $sql) or error(mysqli_error());
+
+  while($row = mysqli_fetch_array($result_query)) {
+    $Result[] = $row;
+  }
+
+  // print_r($Result);
+//--------------------------------------------------------------------------//
+
+  // JSON Format
+  $v_result  .= "{\"list\":[";
+  
+  if (sizeof($Result)  >  0) {
+    for ($i=0;$i<sizeof($Result);$i++) {
+      if ($i != 0) {
+        $v_result  .=  ",";
+      }
+      $v_result  .=  "{\"code\":\"".$Result[$i]['purl']."\",\"name\":\"".$Result[$i]['catname']."\"}";
+    }
+  }
+  
+  $v_result  .= "]}";
+  //print_r($v_result);
+  echo $v_result;   // charset 변환
+?>
